@@ -1,25 +1,28 @@
+
+
+
 export function palindromeInterval(first: number, last: number): number[] | null {
   if (last < first) return null
   const result = [];
   for (let i = first; i <= last; i++) {
-    let reverse = 0;
-    let remainder, number;
-    let n = i;
-    while (n != 0) {
-      remainder = n % 10
-      reverse = reverse * 10 + remainder
-      n /= 10
-    }
-    if (i === reverse) {
+    let converted = i.toString();
+    let reversed = converted.split("").reverse().join("");
+    if (reversed === converted) {
       result.push(i)
     }
   }
   return result
 }
 
-export function getChange(totalValue: number, givenValue: number): { change: number, result: number[] } {
-
-  let change = givenValue - totalValue;
+export function getChange(total: number | undefined, given: number | undefined): { finalChange: number, result: number[] } {
+  if (total === undefined || given === undefined) {
+    throw new Error("Valores nulos")
+  }
+  const finalChange = given - total;
+  let change = finalChange
+  if (change <= 0) {
+    throw new Error("O troco é 0 ou não existe")
+  }
   let notas = [1, 10, 100];
   let n = notas.length;
   let result = [];
@@ -30,8 +33,5 @@ export function getChange(totalValue: number, givenValue: number): { change: num
       result.push(notas[i]);
     }
   }
-
-  return { change, result };
-
-
+  return { finalChange, result };
 }
