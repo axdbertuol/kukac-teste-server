@@ -1,4 +1,5 @@
 import express from 'express'
+import { CepsBody, CepService } from './services/cep-service'
 import { VeiculosService } from './services/veiculos-service'
 import { Carro, Moto } from './types/veiculos'
 import { getChange, palindromeInterval } from './utils/functions'
@@ -25,7 +26,7 @@ routes.post('/getChange', (req, res) => {
     const { finalChange, result } = getChange(total, given)
     res.json({ total, finalChange, result })
   } catch (error) {
-    res.status(500).json({ "error": error })
+    res.status(500).json({ error })
   }
 })
 
@@ -37,6 +38,14 @@ routes.post('/registerVehicle', async (req, res) => {
     await veiculosService.register(veiculo)
     res.status(201).json({})
   } catch (error) {
-    res.status(500).json({ "error": error })
+    res.status(500).json({ error })
   }
+})
+
+routes.post('/getSyncedCeps', async (req, res) => {
+  const ceps: CepsBody = req.body
+  const cepService = new CepService()
+  const cepsInfo = await cepService.getSyncedCepsInfo(ceps)
+
+  res.status(200).json([...cepsInfo])
 })
